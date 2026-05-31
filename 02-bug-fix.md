@@ -1,22 +1,22 @@
 # Step 2: Find and Fix a Bug
 
-## Question
+## Submission
 
-_What is this step asking?_
+### Location
 
-The system is occasionally saving hallucinated data to the database. Identify where the bug lives, describe what the system *should* be doing versus what it *is* doing, and propose a fix in 1–3 sentences.
+_Which system step, decision, component, or data is the problem?_
 
-## What we considered
+### Problem
 
-_To be filled in._
+_What should happen, and what is actually happening?_
 
-## Decision
+### Solution
 
-_To be filled in._
+_How could the system be improved to resolve the issue?_
 
-## Why
+## Reasoning
 
-_To be filled in._
+_What was considered, what was ruled out, and why this answer was chosen._
 
 ## Diagram
 

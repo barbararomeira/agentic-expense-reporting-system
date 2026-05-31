@@ -1,20 +1,16 @@
 # Step 1: System Overview
 
-## Question
+> The course rubric does not require a written submission for this step. This doc exists in the repo because the architecture is the foundation every later step builds on — a portfolio visitor needs the shared mental model too.
 
-_What is this step asking?_
-
-Before extending or fixing anything, document the current agentic expense reporting system: its components, its data, and how a request flows through it. This is the shared mental model every other step relies on.
-
-## What we considered
-
-_To be filled in as we work through the system._
-
-## Decision
+## Components
 
 _To be filled in._
 
-## Why
+## Data
+
+_To be filled in._
+
+## System flow
 
 _To be filled in._
 

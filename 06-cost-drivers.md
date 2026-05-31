@@ -1,28 +1,20 @@
 # Step 6: Estimate Operational Cost Drivers
 
-## Question
+## Submission
 
-_What is this step asking?_
+Mark each component with an "x" in the appropriate cost category.
 
-Analyze the system architecture and identify operational cost drivers, sorted into three categories:
-- **Flat and low** regardless of volume
-- **Flat and high** regardless of volume
-- **Highly variable** depending on volume — and potentially expensive
+| Component | Flat and low, regardless of volume | Flat and high, regardless of volume | Highly variable, depending on volume |
+|---|---|---|---|
+| Database | | | |
+| Spreadsheet | | | |
+| Mobile Web and Camera | | | |
+| Agent 1 | | | |
+| Agent 2 | | | |
+| Agent 3 | | | |
+| Private infrastructure | | | |
+| Payment service | | | |
 
-## What we considered
+## Reasoning
 
-_To be filled in._
-
-## Decision
-
-_To be filled in._
-
-## Why
-
-_To be filled in._
-
-## Cost driver summary
-
-| Activity | Category | Notes |
-|----------|----------|-------|
-| _to be filled_ | _flat-low / flat-high / variable_ | |
+_What was considered, what was ruled out, and why each component was placed in its column._

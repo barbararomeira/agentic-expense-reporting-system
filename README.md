@@ -6,18 +6,16 @@ You play the product leader hired to modernize the expense reporting process at 
 
 ## How to read this repo
 
-Each step doc has the same shape:
+Each step doc has two sections:
 
-1. **Question** — what the step is asking
-2. **What we considered** — options on the table, with trade-offs
-3. **Decision** — what was chosen
-4. **Why** — the reasoning, including what was ruled out and why
+1. **Submission** — the actual answer, in the section headings the course rubric asks for. This is what gets copied into the official Google Doc.
+2. **Reasoning** — the thinking behind the answer: what was considered, what was ruled out, and why. The course doesn't grade this; it's here for the portfolio reader.
 
-The point is to make the *thinking* visible, not just the conclusions. Reading only conclusions hides why one approach was preferred — which is the part that transfers to your own work.
+Reading only the Submission gives you the conclusion; reading the Reasoning shows you why one approach was preferred — which is the part that transfers to your own work.
 
 ## Project structure
 
-- [`01-system-overview.md`](01-system-overview.md) — the architecture we're working with
+- [`01-system-overview.md`](01-system-overview.md) — the architecture we're working with (no written submission required by the rubric, but kept here as the foundation everything else builds on)
 - [`02-bug-fix.md`](02-bug-fix.md) — finding and fixing a hallucination bug
 - [`03-human-review.md`](03-human-review.md) — inserting human review for high-value expenses
 - [`04-eu-privacy.md`](04-eu-privacy.md) — securing PII for EU data privacy compliance

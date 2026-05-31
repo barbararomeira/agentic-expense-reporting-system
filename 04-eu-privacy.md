@@ -1,22 +1,18 @@
 # Step 4: Ensure Customer Privacy
 
-## Question
+## Submission
 
-_What is this step asking?_
+### Location
 
-With a new EU office, the system must comply with EU data privacy regulations. Identify five places in the current architecture where PII could be exposed, and describe the changes needed to protect it — covering components, connections, and practices.
+_Which parts of the system could compromise customer privacy? (Identify five.)_
 
-## What we considered
+### Solution
 
-_To be filled in._
+_What specifically would you change to protect customer privacy?_
 
-## Decision
+## Reasoning
 
-_To be filled in._
-
-## Why
-
-_To be filled in._
+_What was considered, what was ruled out, and why this answer was chosen._
 
 ## Diagram
 

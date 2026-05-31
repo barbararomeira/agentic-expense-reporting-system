@@ -1,22 +1,22 @@
 # Step 3: Add Human Review
 
-## Question
+## Submission
 
-_What is this step asking?_
+### Location
 
-Before approving payment of any expense over $500, the system must consult a human team member. Describe where in the flow the human plugs in, what decisions they can make, and what data they need to decide well.
+_Where in the system should the human be consulted?_
 
-## What we considered
+### Decision
 
-_To be filled in._
+_List the possible decisions the human could make._
 
-## Decision
+### Data
 
-_To be filled in._
+_What data will the human need to make the decision, and where will they get it?_
 
-## Why
+## Reasoning
 
-_To be filled in._
+_What was considered, what was ruled out, and why this answer was chosen._
 
 ## Diagram
 
