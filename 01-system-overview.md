@@ -25,7 +25,7 @@
 2. **Agent 1** extracts transaction data from the receipt image and writes it to the spreadsheet's `data` tab.
 3. **Agent 2** reads the captured data from the spreadsheet, applies the policies defined in the `policy` tab, and consults the HR database for the employee's role. It computes the receipt total and produces a summary with an `approve` or `reject` recommendation, including the reasoning.
 4. **Agent 3** reviews Agent 2's summary and makes the final call:
-   - **Approved** → triggers the third-party payment service to reimburse the employee.
+   - **Approved** → triggers the third-party payment service to reimburse the employee, and notifies the user via the mobile web UI.
    - **Rejected** → returns an error message to the employee via the mobile web UI, with an explanation.
 
 ## Playbook lens — Phase 0
@@ -60,6 +60,7 @@ graph LR
     HRDB[(HR Database)] --> Agent2
     Agent2 -- summary --> Agent3[Agent 3<br/>Decision]
     Agent3 -- approved --> Payment[Payment Service]
+    Agent3 -- approved --> MobileUI
     Agent3 -- rejected --> MobileUI
     Agent1 -. status .-> MobileUI
     Agent2 -. status .-> MobileUI
