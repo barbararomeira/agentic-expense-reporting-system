@@ -61,5 +61,9 @@ graph LR
     Agent2 -- summary --> Agent3[Agent 3<br/>Decision]
     Agent3 -- approved --> Payment[Payment Service]
     Agent3 -- rejected --> MobileUI
+    Agent1 -. status .-> MobileUI
+    Agent2 -. status .-> MobileUI
     RefImages[(Reference Image DB<br/>currently unused)]
 ```
+
+The dotted lines from Agent 1 and Agent 2 back to the mobile UI represent the status/feedback channel each agent reports through (progress updates while the report is being processed). Only Agent 3's rejection message is explicitly specified in the project documentation; the other two channels are implied by the course diagram convention.
