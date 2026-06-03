@@ -20,12 +20,16 @@ _Filled in as we work through each step._
 
 ### What the playbook covered cleanly
 
-_To be filled in._
+- **Step 1 — Foundations (four capabilities + autonomy spectrum).** The Perceive / Reason / Act / Remember frame held up under pressure for each agent. The autonomy-spectrum heuristic ("middle of the spectrum is usually the right answer") immediately flagged Agent 3's fully-autonomous reimbursement as unusual — which is exactly the gap Step 3 will close.
+- **Step 2 — Phase 3 Guardrails (output filtering).** The confidence-score gate before the spreadsheet write is a textbook output-filter guardrail. The playbook's framing of "block low-confidence outputs at the boundary, not after" matched the chosen fix one-to-one.
+- **Step 2 — Phase 6 Govern (silent failure / cascade).** Naming the pattern up front made it easy to see why catching the bug at Agent 3's decision (or at reimbursement) would be too late — the cascade was already corrupting Agent 2's summary by then.
 
 ### Where the playbook left gaps
 
-_To be filled in._
+- **Step 2 — Self-grading confidence is treated as a guardrail without warning that it can be circular.** Phase 3 introduces "confidence scoring" as an output filter, but doesn't flag that asking the same model "how sure are you?" is the LLM grading its own homework — and a hallucination is, by definition, confident wrongness. The fix in this project only became trustworthy once Agent 1's confidence was grounded against the Reference Image Database (a separate, known-good corpus). Without that grounding, the guardrail is theatre.
+- **Step 2 — Brownfield clue: "what's already in the architecture but unused?"** The Reference Image DB was sitting in the system overview the whole time. The playbook does not prompt the reader to scan an existing architecture for unused components before proposing a fix — but in a brownfield context, the unused component is often there *because* it is meant to be activated for exactly this kind of problem. This question (*"is the answer already in the architecture?"*) was load-bearing for Step 2 and isn't in the playbook.
 
 ### Suggested additions for a future version
 
-_To be filled in._
+- **Add to Phase 3 — Guardrails:** a "circular confidence" warning. When the same model both produces output and assesses its own confidence in that output, the score is not a guardrail. Real output filtering needs an *independent* signal — a separate model, a rules check, or grounding against a known-good corpus. Worked example: receipt-extraction hallucination caught only when confidence is measured as similarity to a reference-image database, not as the LLM's self-rating.
+- **Add as a new short section (or to Phase 0):** *Brownfield audit — read the architecture before reaching for the playbook.* Before applying any phase to a brownfield problem, scan the existing system for components that are documented but unused, capabilities that exist but aren't wired up, or data stores nothing currently reads from. These are usually load-bearing for the next step.
