@@ -4,6 +4,14 @@ Project for the Udacity *AI Agents for Business Leaders* course.
 
 You play the product leader hired to modernize the expense reporting process at a legacy industrial manufacturer. The course supplies a working agentic AI system — a mobile UI, three agents (extraction, computation, decision), and a third-party payment service — and the project asks you to find and fix a bug, add human review, secure PII for EU expansion, extend the workflow with a new capability, and analyze operational cost drivers.
 
+## Final architecture
+
+The diagram below is the system **after every change across the project is applied** — the bug fix, human review, EU privacy controls, and the new high-risk approval capability. Each addition is colour-coded to the step that introduced it.
+
+![Full architecture of the expense-reporting system after all steps](diagrams/architecture.png)
+
+See [`architecture.md`](architecture.md) for the colour legend, an annotated walkthrough, and the end-to-end flow in words.
+
 ## How to read this repo
 
 Each step doc has two sections:
