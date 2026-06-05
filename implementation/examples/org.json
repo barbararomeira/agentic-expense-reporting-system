@@ -1,0 +1,8 @@
+{
+  "employees": {
+    "emp-100": {"name": "Dana Lee", "role": "Engineer", "department": "Engineering", "region": "US", "manager_id": "mgr-eng"}
+  },
+  "approvers": {
+    "Engineering": {"id": "mgr-eng", "name": "Priya Shah", "department": "Engineering"}
+  }
+}

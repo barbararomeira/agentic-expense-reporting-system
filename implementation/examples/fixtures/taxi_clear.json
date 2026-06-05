@@ -1,0 +1,8 @@
+{
+  "vendor": "City Cabs",
+  "date": "2026-05-03",
+  "category": "transport",
+  "line_items": [{"description": "Airport to hotel", "amount": 45.00}],
+  "stated_total": 45.00,
+  "image_quality": "clear"
+}
