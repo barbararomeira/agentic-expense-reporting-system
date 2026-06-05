@@ -47,11 +47,6 @@ Re-running Agent 1 produces nothing new — it extracts from the *same* receipt,
 
 A fourth outcome — *escalate* to a legal or credit team — was considered. Escalation answers a different question than the others ("is this my decision to make?" rather than "do I have enough information?") and would be legitimate where the data is complete but the call exceeds the reviewer's authority (suspected fraud, a policy gray area, an amount above their limit). It was deferred because this system does not define a distinct higher authority to escalate *to* — adding the branch would create a route with no clear owner. It is noted here as a deliberate scoping decision rather than an omission.
 
-### Playbook lens
-
-- **Phase 3 — Guardrails:** this is a *behavioural / escalation* guardrail — a rule that decides when an action may proceed autonomously versus when it must be held for a human.
-- **Progressive authorization ladder** (read → draft → supervised → autonomous): Step 3 pulls Agent 3's reimbursement decision back from *autonomous* to *supervised*, but only above the $500 threshold. Low-value expenses keep their autonomy; the high-value, irreversible ones are gated. This is the follow-through on the autonomy-spectrum gap flagged in Step 1.
-
 ## Diagram
 
 ```mermaid

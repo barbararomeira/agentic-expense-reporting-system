@@ -40,11 +40,6 @@ A naive confidence score is the LLM grading its own homework. The whole nature o
 
 UI guidance is the cheapest fix in the stack — it prevents bad input from entering the system at all. Every receipt that the user re-frames before submitting is one that Agent 1 never has to reason about under uncertainty, one fewer reference-DB lookup, and one fewer round trip back to the user. It is poka-yoke (mistake-proofing) at the source.
 
-### Playbook lens
-
-- **Phase 3 — Guardrails:** the confidence-score gate is a textbook *output filter* — a check between an agent's reason and its act that blocks low-confidence outputs from propagating.
-- **Phase 6 — Govern:** the underlying failure mode is the *silent failure / cascade* pattern. A single unflagged uncertainty at one boundary corrupts every downstream step because no component in the chain is checking the integrity of its input.
-
 ## Diagram
 
 ```mermaid

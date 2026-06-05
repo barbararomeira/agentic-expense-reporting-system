@@ -22,6 +22,5 @@ Reading only the Submission gives you the conclusion; reading the Reasoning show
 - [`05-extend-workflow.md`](05-extend-workflow.md) — adding a new customer-requested capability
 - [`06-cost-drivers.md`](06-cost-drivers.md) — analyzing operational cost drivers
 - [`architecture.md`](architecture.md) — the full system after all steps, in one diagram (each addition colour-coded to its step)
-- [`playbook-evaluation.md`](playbook-evaluation.md) — meta-findings on the internal playbook used as the working reference
 
 Architecture diagrams live in [`diagrams/`](diagrams/) and are also embedded inline in each step doc via Mermaid.

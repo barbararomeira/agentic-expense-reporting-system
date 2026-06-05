@@ -28,7 +28,7 @@
    - **Approved** → triggers the third-party payment service to reimburse the employee, and notifies the user via the mobile web UI.
    - **Rejected** → returns an error message to the employee via the mobile web UI, with an explanation.
 
-## Playbook lens — Phase 0
+## Capability & autonomy analysis
 
 ### Capabilities
 
@@ -47,7 +47,7 @@ Notes:
 
 ### Autonomy spectrum
 
-The current system sits at **fully autonomous**. There is no human in the loop. Agent 3 makes the final reimbursement call and triggers the payment service for any amount, without consultation. The playbook flags this position as unusual — most successful business agents sit in the middle of the spectrum, with the agent doing the work and a human keeping the final say. This is the gap Step 3 is going to close (human review for any expense over $500).
+The current system sits at **fully autonomous**. There is no human in the loop. Agent 3 makes the final reimbursement call and triggers the payment service for any amount, without consultation. This position is unusual — most successful business agents sit in the middle of the spectrum, with the agent doing the work and a human keeping the final say. This is the gap Step 3 is going to close (human review for any expense over $500).
 
 ## Architecture diagram
 

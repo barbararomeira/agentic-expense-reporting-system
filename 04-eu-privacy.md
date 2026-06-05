@@ -84,11 +84,6 @@ Two surfaces hand personal data to an **external company** — the **LLM provide
 
 An LLM provider differs from a payment processor in one dangerous way: AI models improve by **training on the data that flows through them**. If employees' receipts are used for training, that data is **absorbed into the model and cannot be extracted** — which directly defeats the employee's **right to erasure**. A "delete my data" request becomes impossible to honour. So the DPA must explicitly **forbid using the data for training**. This is the one control with no clean technical undo, which is exactly why it has to be prevented contractually, up front.
 
-### Playbook lens
-
-- **Phase 6 — Govern:** this step is governance applied to personal data — minimisation, purpose limitation, retention, and access control are the *control toolkit* turned toward privacy rather than correctness.
-- **Least privilege:** the HR-database fix (read only role + status) and the access restrictions throughout are the security principle of granting the minimum access required — applied to *reading*, *storing*, and *sharing* alike.
-
 ## Diagram
 
 ```mermaid
