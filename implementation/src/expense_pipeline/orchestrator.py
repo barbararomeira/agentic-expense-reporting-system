@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import json
 from dataclasses import dataclass
+from decimal import Decimal
 from pathlib import Path
 
 from expense_pipeline.agents.agent1_extract import run_agent1
@@ -16,7 +17,7 @@ from expense_pipeline.agents.agent2_policy import run_agent2
 from expense_pipeline.agents.agent3_decision import run_agent3
 from expense_pipeline.extractors import get_extractor
 from expense_pipeline.extractors.base import ReceiptExtractor
-from expense_pipeline.models import Decision, ExpenseReport, Receipt
+from expense_pipeline.models import Decision, DecisionStatus, ExpenseReport, Receipt
 from expense_pipeline.payment import PaymentService
 from expense_pipeline.policy import Policy
 
@@ -42,11 +43,28 @@ class Pipeline:
             payment=PaymentService(),
         )
 
-    def run_report(self, report: ExpenseReport) -> PipelineResult:
+    def run_report(self, report: ExpenseReport, validate: bool = True) -> PipelineResult:
         transcript: list[str] = []
         store: list[Receipt] = []   # the 'spreadsheet' — receipts saved this run
 
-        receipts = run_agent1(report, self.extractor, store, transcript)
+        receipts, problems = run_agent1(
+            report, self.extractor, store, transcript, self.policy, validate=validate
+        )
+
+        # Step 2 fix: if any extraction failed the gate, stop here. Nothing was
+        # saved, so nothing downstream can act on fabricated data.
+        if problems:
+            transcript.append(
+                "pipeline: extraction failed validation -> NEEDS_MORE_INFO (employee asked to resubmit)"
+            )
+            decision = Decision(
+                report_id=report.report_id,
+                status=DecisionStatus.NEEDS_MORE_INFO,
+                amount=Decimal("0"),
+                reason="; ".join(problems),
+            )
+            return PipelineResult(report_id=report.report_id, decision=decision, transcript=transcript)
+
         analysis = run_agent2(receipts, self.policy, transcript)
         decision = run_agent3(report, analysis, self.payment, transcript)
 

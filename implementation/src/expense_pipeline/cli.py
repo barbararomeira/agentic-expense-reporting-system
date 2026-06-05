@@ -20,7 +20,7 @@ def cmd_run(args: argparse.Namespace) -> None:
     policy_path = args.policy or (EXAMPLES / "policy.json")
     pipeline = Pipeline.default(policy_path)
     report = load_report(args.report)
-    result = pipeline.run_report(report)
+    result = pipeline.run_report(report, validate=not args.no_validation)
 
     print(f"Report {result.report_id}:")
     for line in result.transcript:
@@ -37,6 +37,11 @@ def main(argv: list[str] | None = None) -> None:
     p_run = sub.add_parser("run", help="run one expense report through the pipeline")
     p_run.add_argument("report", help="path to a report JSON file")
     p_run.add_argument("--policy", help="path to policy.json (default: examples/policy.json)")
+    p_run.add_argument(
+        "--no-validation",
+        action="store_true",
+        help="skip Agent 1's validation gate (reproduces the Step 2 bug)",
+    )
     p_run.set_defaults(func=cmd_run)
 
     args = parser.parse_args(argv)

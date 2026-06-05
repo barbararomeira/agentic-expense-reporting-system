@@ -1,0 +1,8 @@
+{
+  "vendor": "Corner Bistro",
+  "date": "2026-05-05",
+  "category": "meals",
+  "line_items": [{"description": "Lunch", "amount": 38.00}],
+  "stated_total": 38.00,
+  "image_quality": "blurry"
+}

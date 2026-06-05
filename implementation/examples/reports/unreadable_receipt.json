@@ -1,0 +1,6 @@
+{
+  "report_id": "RPT-UNREADABLE",
+  "employee_id": "emp-100",
+  "purpose": "Client dinner",
+  "receipts": ["dinner_unreadable"]
+}
