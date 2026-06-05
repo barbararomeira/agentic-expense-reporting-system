@@ -1,0 +1,44 @@
+graph TB
+    Camera["Camera +<br/>Mobile UI"]
+    RefDB[("Reference<br/>Image DB")]
+    A1["Agent 1<br/>Extraction"]
+    Conf{"Confidence<br/>OK?"}
+    SS[("Spreadsheet")]
+    HR[("HR<br/>Database")]
+    A2["Agent 2<br/>Compute·Policy·VAT"]
+    A3["Agent 3<br/>Decision"]
+    Gate{"Approval<br/>tier?"}
+    One["One<br/>approver"]
+    Two{{"Two approvers<br/>2 departments"}}
+    Pay["Payment<br/>Service"]
+    Rej["Rejection path<br/>notify + resubmit"]
+    Notify["Notify<br/>employee"]
+
+    Camera -->|encrypted| A1
+    RefDB --> A1
+    A1 --> Conf
+    Conf -->|no| Camera
+    Conf -->|yes| SS
+    SS --> A2
+    HR --> A2
+    A2 --> A3
+    A3 -->|reject| Rej
+    A3 -->|approve| Gate
+    Gate -->|"≤ $500"| Pay
+    Gate -->|"> $500"| One
+    Gate -->|high-risk| Two
+    HR -.->|pick 2| Two
+    One -->|approve| Pay
+    One -->|reject| Rej
+    Two -->|both approve| Pay
+    Two -->|any reject| Rej
+    Pay --> Notify
+
+    classDef s2 fill:#d4edda,stroke:#155724,color:#155724;
+    classDef s3 fill:#e7f0fd,stroke:#1d4ed8,color:#1d4ed8;
+    classDef s5 fill:#ede9fe,stroke:#6d28d9,color:#6d28d9;
+    classDef s4 fill:#ffffff,stroke:#d97706,stroke-width:2px,color:#92400e;
+    class RefDB,Conf s2;
+    class One,Gate s3;
+    class Two s5;
+    class Camera,SS,HR,Pay s4;

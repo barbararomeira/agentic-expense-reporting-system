@@ -51,6 +51,8 @@ graph LR
 
 > The three agents (1, 2, 3) all call a **third-party LLM** governed by a **no-training clause in a DPA** (Step 4) — a cross-cutting dependency, kept out of the diagram to avoid clutter.
 
+> **Rendered images** are in `diagrams/`: `architecture.png` (landscape, this diagram) and `architecture-vertical.png` (portrait — better for a document page). Both are generated from Mermaid via `mermaid-cli`.
+
 ## What each colour means
 
 - 🟩 **Green — Step 2 (bug fix).** The **Reference Image DB** is now consulted, and a **confidence gate** blocks low-confidence extractions before they reach the spreadsheet (routing them back to re-capture instead).
