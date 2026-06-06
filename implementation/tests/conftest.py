@@ -15,6 +15,15 @@ def pipeline():
 
 
 @pytest.fixture
+def make_pipeline():
+    """Build a pipeline with a custom (e.g. scripted) reviewer."""
+    def _make(reviewer=None):
+        return Pipeline.default(EXAMPLES / "policy.json", reviewer=reviewer)
+
+    return _make
+
+
+@pytest.fixture
 def report():
     def _load(name: str):
         return load_report(EXAMPLES / "reports" / f"{name}.json")

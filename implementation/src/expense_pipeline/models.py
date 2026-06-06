@@ -72,7 +72,24 @@ class DecisionStatus(str, Enum):
     APPROVED = "APPROVED"
     REJECTED = "REJECTED"
     NEEDS_MORE_INFO = "NEEDS_MORE_INFO"        # Phase B/C: bad extraction or info request
-    NEEDS_HUMAN_REVIEW = "NEEDS_HUMAN_REVIEW"  # Phase C/D: escalated to a human
+    NEEDS_HUMAN_REVIEW = "NEEDS_HUMAN_REVIEW"  # Phase C/D: escalated, couldn't route
+
+
+class Verdict(str, Enum):
+    """What a human reviewer can decide (Phase C)."""
+    APPROVE = "approve"
+    REJECT = "reject"
+    REQUEST_INFO = "request_more_info"
+
+
+@dataclass
+class Approval:
+    """One reviewer's verdict on an escalated expense."""
+    approver_id: str
+    approver_name: str
+    department: str
+    verdict: Verdict
+    note: str = ""
 
 
 @dataclass
@@ -84,3 +101,4 @@ class Decision:
     reason: str
     paid: bool = False
     payment_ref: str | None = None
+    approvals: list[Approval] = field(default_factory=list)  # who signed off (Phase C/D)

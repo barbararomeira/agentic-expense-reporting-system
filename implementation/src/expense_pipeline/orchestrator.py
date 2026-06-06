@@ -15,8 +15,10 @@ from pathlib import Path
 from expense_pipeline.agents.agent1_extract import run_agent1
 from expense_pipeline.agents.agent2_policy import run_agent2
 from expense_pipeline.agents.agent3_decision import run_agent3
+from expense_pipeline.directory import OrgDirectory
 from expense_pipeline.extractors import get_extractor
 from expense_pipeline.extractors.base import ReceiptExtractor
+from expense_pipeline.human_review import HumanReviewer, ScriptedReviewer
 from expense_pipeline.models import Decision, DecisionStatus, ExpenseReport, Receipt
 from expense_pipeline.payment import PaymentService
 from expense_pipeline.policy import Policy
@@ -34,13 +36,18 @@ class Pipeline:
     policy: Policy
     extractor: ReceiptExtractor
     payment: PaymentService
+    directory: OrgDirectory
+    reviewer: HumanReviewer
 
     @classmethod
-    def default(cls, policy_path: str | Path) -> "Pipeline":
+    def default(cls, policy_path: str | Path, reviewer: HumanReviewer | None = None) -> "Pipeline":
+        policy_path = Path(policy_path)
         return cls(
             policy=Policy.load(policy_path),
             extractor=get_extractor(),
             payment=PaymentService(),
+            directory=OrgDirectory.load(policy_path.parent / "org.json"),
+            reviewer=reviewer or ScriptedReviewer(),
         )
 
     def run_report(self, report: ExpenseReport, validate: bool = True) -> PipelineResult:
@@ -66,7 +73,10 @@ class Pipeline:
             return PipelineResult(report_id=report.report_id, decision=decision, transcript=transcript)
 
         analysis = run_agent2(receipts, self.policy, transcript)
-        decision = run_agent3(report, analysis, self.payment, transcript)
+        decision = run_agent3(
+            report, analysis, self.payment, transcript,
+            self.policy, self.directory, self.reviewer,
+        )
 
         return PipelineResult(report_id=report.report_id, decision=decision, transcript=transcript)
 
