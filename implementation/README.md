@@ -50,6 +50,51 @@ python3 -m venv .venv
 checks and all approval gates are deterministic Python — a financial decision
 must be reproducible, never an LLM guess.
 
+## Receipt extraction & the LLM boundary
+
+Extraction is the one place an LLM genuinely belongs (turning a messy receipt
+into structured fields). The pipeline depends only on the `ReceiptExtractor`
+interface (`extractors/base.py`), so the engine is swappable:
+
+- **Default — `MockExtractor`** (`extractors/mock.py`): deterministic, offline,
+  no API key. It reads a JSON receipt fixture and behaves like a vision model at
+  the fixture's `image_quality` (`clear` / `blurry` / `unreadable`). This is what
+  keeps the whole pipeline and every test reproducible.
+- **Real extraction — intentionally not built here.** A real backend would plug
+  in behind the same interface *without touching any agent*. It is left out on
+  purpose; if added, it must call Claude through a **Max subscription via the
+  `claude` CLI** (a subprocess) — **never** the paid Anthropic API or an
+  `ANTHROPIC_API_KEY`. The mock stays the default and all tests stay offline.
+
+Illustrative shape of a compliant real backend (not wired in):
+
+```python
+# extractors/claude_cli.py  (illustrative — not part of this build)
+import subprocess
+
+class ClaudeCliExtractor:
+    name = "claude"
+
+    def extract(self, source: str):
+        receipt_text = _load_fixture_text(source)
+        out = subprocess.run(
+            ["claude", "-p", receipt_text,
+             "--system-prompt", "Extract the receipt as strict JSON: vendor, date, "
+             "category, line_items[{description, amount}], stated_total, confidence.",
+             "--model", "sonnet", "--fallback-model", "haiku"],
+            capture_output=True, text=True, timeout=150,
+        ).stdout
+        data = _first_json_object(out)        # tolerant parse of the CLI output
+        return _to_extraction_result(source, data)
+
+# would be selected via e.g. EXPENSE_EXTRACTOR=claude; the default remains the mock.
+```
+
+This is the same pluggable design a production system would use. The one
+deliberate difference from a typical reference implementation: the real path
+runs on a personal **Max subscription with no API key**, and the project stays
+fully offline-testable.
+
 ## Build phases
 
 - ✅ **A** — end-to-end slice: one report → 3 agents → decision + mock payment.
