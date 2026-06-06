@@ -30,6 +30,12 @@ def cmd_run(args: argparse.Namespace) -> None:
     print(f"-> {d.status.value} | amount={d.amount} | paid={d.paid}{tail}")
 
 
+def cmd_cost(args: argparse.Namespace) -> None:
+    from expense_pipeline.cost import render_table
+
+    print(render_table())
+
+
 def main(argv: list[str] | None = None) -> None:
     parser = argparse.ArgumentParser(prog="expense-pipeline")
     sub = parser.add_subparsers(dest="command", required=True)
@@ -49,6 +55,9 @@ def main(argv: list[str] | None = None) -> None:
         help="where the data store is hosted (default: US)",
     )
     p_run.set_defaults(func=cmd_run)
+
+    p_cost = sub.add_parser("cost", help="show the operational cost-driver table")
+    p_cost.set_defaults(func=cmd_cost)
 
     args = parser.parse_args(argv)
     args.func(args)

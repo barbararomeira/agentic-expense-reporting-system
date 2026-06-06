@@ -11,8 +11,25 @@ pipeline and every test are reproducible.
 python3 -m venv .venv
 ./.venv/bin/pip install -e ".[dev]"
 
-# run one expense report through the three agents
+# auto-approved (under $500)
 ./.venv/bin/python -m expense_pipeline run examples/reports/small_trip.json
+
+# the Step 2 bug: blocked by the validation gate, then reproduced
+./.venv/bin/python -m expense_pipeline run examples/reports/unreadable_receipt.json
+./.venv/bin/python -m expense_pipeline run examples/reports/unreadable_receipt.json --no-validation
+
+# human review (> $500) and two-person approval (amount / category / conflict)
+./.venv/bin/python -m expense_pipeline run examples/reports/large_trip.json
+./.venv/bin/python -m expense_pipeline run examples/reports/huge_trip.json
+./.venv/bin/python -m expense_pipeline run examples/reports/gift_highrisk.json
+./.venv/bin/python -m expense_pipeline run examples/reports/conflict_report.json
+
+# EU data residency
+./.venv/bin/python -m expense_pipeline run examples/reports/eu_resident.json --region US   # BLOCKED
+./.venv/bin/python -m expense_pipeline run examples/reports/eu_resident.json --region EU   # proceeds
+
+# operational cost drivers
+./.venv/bin/python -m expense_pipeline cost
 
 # tests
 ./.venv/bin/python -m pytest
@@ -35,7 +52,10 @@ must be reproducible, never an LLM guess.
 
 ## Build phases
 
-- **A — end-to-end slice** (done): one report → 3 agents → decision + mock payment.
-- B — validation gate (the bug fix) · C — human review (>$500) · D — two-person
-  approval · E — privacy / EU residency · F — cost report · G (optional) — real
-  `claude`-CLI extraction.
+- ✅ **A** — end-to-end slice: one report → 3 agents → decision + mock payment.
+- ✅ **B** — validation gate (Step 2 bug fix): refuse low-confidence / non-reconciling extractions.
+- ✅ **C** — human review (Step 3): one approver for approved expenses over $500.
+- ✅ **D** — two-person approval (Step 5): two departments when amount > $5000, a reporting-line conflict, or a high-risk category; unanimous-blocks.
+- ✅ **E** — privacy (Step 4): EU data residency, minimisation, card last-4 only, pseudonymised payee.
+- ✅ **F** — cost-driver report (Step 6).
+- ⬜ **G** (optional) — real receipt extraction via the `claude` CLI (Max subscription, no API key). Mock stays the default; tests remain offline.
