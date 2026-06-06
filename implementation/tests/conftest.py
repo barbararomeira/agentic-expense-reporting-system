@@ -16,9 +16,9 @@ def pipeline():
 
 @pytest.fixture
 def make_pipeline():
-    """Build a pipeline with a custom (e.g. scripted) reviewer."""
-    def _make(reviewer=None):
-        return Pipeline.default(EXAMPLES / "policy.json", reviewer=reviewer)
+    """Build a pipeline with a custom reviewer and/or store region."""
+    def _make(reviewer=None, store_region="US"):
+        return Pipeline.default(EXAMPLES / "policy.json", reviewer=reviewer, store_region=store_region)
 
     return _make
 

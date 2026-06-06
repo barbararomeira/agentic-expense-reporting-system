@@ -18,11 +18,12 @@ from expense_pipeline.human_review import HumanReviewer, ReviewContext
 from expense_pipeline.models import Approval, Decision, DecisionStatus, ExpenseReport, Verdict
 from expense_pipeline.payment import PaymentService
 from expense_pipeline.policy import Policy
+from expense_pipeline.privacy import pseudonymize, redact_text
 
 
-def _pay_and_approve(report, analysis, payment, transcript, approvals) -> Decision:
-    ref = payment.reimburse(report.employee_id, analysis.total)
-    transcript.append(f"agent3: APPROVED; reimbursed {analysis.total} (ref {ref})")
+def _pay_and_approve(report, analysis, payment, transcript, approvals, payee) -> Decision:
+    ref = payment.reimburse(payee, analysis.total)
+    transcript.append(f"agent3: APPROVED; reimbursed {analysis.total} to {payee} (ref {ref})")
     return Decision(
         report_id=report.report_id, status=DecisionStatus.APPROVED, amount=analysis.total,
         reason="approved", paid=True, payment_ref=ref, approvals=approvals,
@@ -51,6 +52,7 @@ def run_agent3(
     employee = directory.employee(report.employee_id)
     dept = employee.department if employee else "Unknown"
     primary = directory.approver_for_department(dept)
+    payee = pseudonymize(employee) if employee else f"employee:{report.employee_id}"
 
     # The three Step 5 risk triggers.
     conflict = bool(employee and primary and directory.is_conflict(employee, primary))
@@ -60,13 +62,13 @@ def run_agent3(
     needs_review = needs_dual or analysis.total > policy.human_review_threshold
 
     if not needs_review:
-        return _pay_and_approve(report, analysis, payment, transcript, [])
+        return _pay_and_approve(report, analysis, payment, transcript, [], payee)
 
     ctx = ReviewContext(
         report_id=report.report_id,
         employee_name=employee.name if employee else report.employee_id,
         department=dept,
-        purpose=report.purpose,
+        purpose=redact_text(report.purpose),   # mask any card-like digits in free text
         total=analysis.total,
         summary=analysis.summary,
     )
@@ -94,7 +96,7 @@ def run_agent3(
         )
         approvals = [_review(a, reviewer, ctx, transcript) for a in approvers]
         if all(ap.verdict == Verdict.APPROVE for ap in approvals):
-            return _pay_and_approve(report, analysis, payment, transcript, approvals)
+            return _pay_and_approve(report, analysis, payment, transcript, approvals, payee)
         transcript.append("agent3: not unanimous -> BLOCKED (REJECTED)")
         return Decision(
             report.report_id, DecisionStatus.REJECTED, analysis.total,
@@ -109,7 +111,7 @@ def run_agent3(
 
     approval = _review(primary, reviewer, ctx, transcript)
     if approval.verdict == Verdict.APPROVE:
-        return _pay_and_approve(report, analysis, payment, transcript, [approval])
+        return _pay_and_approve(report, analysis, payment, transcript, [approval], payee)
     if approval.verdict == Verdict.REJECT:
         transcript.append("agent3: REJECTED by reviewer")
         return Decision(report.report_id, DecisionStatus.REJECTED, analysis.total, "rejected by reviewer", approvals=[approval])

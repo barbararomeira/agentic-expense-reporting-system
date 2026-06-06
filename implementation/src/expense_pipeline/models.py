@@ -27,6 +27,7 @@ class Receipt:
     category: str
     line_items: list[LineItem]
     stated_total: Decimal  # the total printed on the receipt
+    card_last4: str | None = None  # only the last 4 digits are ever kept (Phase E)
 
     @property
     def computed_total(self) -> Decimal:
@@ -73,6 +74,7 @@ class DecisionStatus(str, Enum):
     REJECTED = "REJECTED"
     NEEDS_MORE_INFO = "NEEDS_MORE_INFO"        # Phase B/C: bad extraction or info request
     NEEDS_HUMAN_REVIEW = "NEEDS_HUMAN_REVIEW"  # Phase C/D: escalated, couldn't route
+    BLOCKED = "BLOCKED"                        # Phase E: data-residency violation
 
 
 class Verdict(str, Enum):

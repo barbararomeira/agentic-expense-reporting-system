@@ -1,7 +1,7 @@
 {
   "employees": {
     "emp-100": {"name": "Dana Lee", "role": "Engineer", "department": "Engineering", "region": "US", "manager_id": "lead-eng"},
-    "emp-200": {"name": "Mateo Ruiz", "role": "Sales Rep", "department": "Sales", "region": "EU", "manager_id": "mgr-sales"},
+    "emp-200": {"name": "Mateo Ruiz", "role": "Sales Rep", "department": "Sales", "region": "EU", "manager_id": "lead-sales"},
     "emp-300": {"name": "Sam Cohen", "role": "Engineer", "department": "Engineering", "region": "US", "manager_id": "mgr-eng"}
   },
   "approvers": {

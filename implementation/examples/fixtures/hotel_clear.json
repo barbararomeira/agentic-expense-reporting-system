@@ -4,5 +4,6 @@
   "category": "lodging",
   "line_items": [{"description": "2 nights", "amount": 600.00}],
   "stated_total": 600.00,
-  "image_quality": "clear"
+  "image_quality": "clear",
+  "card_number": "4111111111111234"
 }

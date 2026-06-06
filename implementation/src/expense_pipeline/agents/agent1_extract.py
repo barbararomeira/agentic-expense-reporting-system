@@ -1,19 +1,20 @@
-"""Agent 1 — extraction + the validation gate (Step 2 bug fix).
+"""Agent 1 — extraction + the validation gate (Step 2) + minimal, region-aware
+persistence (Step 4).
 
-Reads each receipt via the pluggable extractor, then runs it through a
-validation gate BEFORE saving. The gate is the fix for the hallucination bug:
-an extraction that is low-confidence, in a disallowed category, or whose line
-items don't reconcile with the stated total is refused and never saved — so
-fabricated data can't cascade to Agents 2 and 3.
+Reads each receipt, runs the validation gate, then persists a *minimized* row
+through the region-aware store: only the fields we need, only the card's last 4
+digits, and never an EU employee's data into a non-EU store (the store raises
+DataResidencyError, which the orchestrator turns into a BLOCKED decision).
 
-`validate=False` skips the gate, which reproduces the original bug on purpose
-(used by the CLI's `--no-validation` flag for the demo).
+The full Receipt objects are still returned for in-memory processing by Agents
+2/3 this run; it's the *persisted* copy that is minimized.
 """
 from __future__ import annotations
 
 from expense_pipeline.extractors.base import ReceiptExtractor
-from expense_pipeline.models import ExpenseReport, ExtractionResult, Receipt
+from expense_pipeline.models import Employee, ExpenseReport, ExtractionResult, Receipt
 from expense_pipeline.policy import Policy
+from expense_pipeline.privacy import RegionalDataStore, minimize_receipt
 
 
 def _validate(result: ExtractionResult, policy: Policy) -> list[str]:
@@ -41,9 +42,10 @@ def _validate(result: ExtractionResult, policy: Policy) -> list[str]:
 def run_agent1(
     report: ExpenseReport,
     extractor: ReceiptExtractor,
-    store: list[Receipt],
+    store: RegionalDataStore,
     transcript: list[str],
     policy: Policy,
+    employee: Employee | None,
     validate: bool = True,
 ) -> tuple[list[Receipt], list[str]]:
     receipts: list[Receipt] = []
@@ -61,7 +63,10 @@ def run_agent1(
             transcript.append(f"agent1: '{source}' FAILED validation -> NOT saved [{'; '.join(issues)}]")
             problems.extend(issues)
             continue
-        store.append(result.receipt)
+
+        row = minimize_receipt(result.receipt)
+        store.write(row, employee)   # region-enforced; raises DataResidencyError if EU->non-EU
+        transcript.append(f"agent1: saved minimized row {row}")
         receipts.append(result.receipt)
 
     return receipts, problems

@@ -22,6 +22,7 @@ from expense_pipeline.human_review import HumanReviewer, ScriptedReviewer
 from expense_pipeline.models import Decision, DecisionStatus, ExpenseReport, Receipt
 from expense_pipeline.payment import PaymentService
 from expense_pipeline.policy import Policy
+from expense_pipeline.privacy import DataResidencyError, RegionalDataStore
 
 
 @dataclass
@@ -38,9 +39,15 @@ class Pipeline:
     payment: PaymentService
     directory: OrgDirectory
     reviewer: HumanReviewer
+    store_region: str = "US"   # where the data store is hosted (Phase E)
 
     @classmethod
-    def default(cls, policy_path: str | Path, reviewer: HumanReviewer | None = None) -> "Pipeline":
+    def default(
+        cls,
+        policy_path: str | Path,
+        reviewer: HumanReviewer | None = None,
+        store_region: str = "US",
+    ) -> "Pipeline":
         policy_path = Path(policy_path)
         return cls(
             policy=Policy.load(policy_path),
@@ -48,15 +55,22 @@ class Pipeline:
             payment=PaymentService(),
             directory=OrgDirectory.load(policy_path.parent / "org.json"),
             reviewer=reviewer or ScriptedReviewer(),
+            store_region=store_region,
         )
 
     def run_report(self, report: ExpenseReport, validate: bool = True) -> PipelineResult:
         transcript: list[str] = []
-        store: list[Receipt] = []   # the 'spreadsheet' — receipts saved this run
+        employee = self.directory.employee(report.employee_id)
+        store = RegionalDataStore(self.store_region)   # the region-aware 'spreadsheet'
 
-        receipts, problems = run_agent1(
-            report, self.extractor, store, transcript, self.policy, validate=validate
-        )
+        try:
+            receipts, problems = run_agent1(
+                report, self.extractor, store, transcript, self.policy, employee, validate=validate
+            )
+        except DataResidencyError as e:
+            transcript.append(f"pipeline: BLOCKED (data residency) — {e}")
+            decision = Decision(report.report_id, DecisionStatus.BLOCKED, Decimal("0"), str(e))
+            return PipelineResult(report_id=report.report_id, decision=decision, transcript=transcript)
 
         # Step 2 fix: if any extraction failed the gate, stop here. Nothing was
         # saved, so nothing downstream can act on fabricated data.

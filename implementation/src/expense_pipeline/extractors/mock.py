@@ -36,14 +36,18 @@ class MockExtractor:
         quality = data.get("image_quality", "clear")
         line_items = [LineItem(li["description"], Decimal(li["amount"])) for li in data["line_items"]]
         stated_total = Decimal(data["stated_total"])
+        # Data minimisation at the source: if the receipt shows a card number,
+        # keep only the last 4 digits — the full number never enters the system.
+        raw_card = data.get("card_number")
+        card_last4 = raw_card[-4:] if raw_card else None
 
         if quality == "clear":
-            receipt = Receipt(source, data["vendor"], data["date"], data["category"], line_items, stated_total)
+            receipt = Receipt(source, data["vendor"], data["date"], data["category"], line_items, stated_total, card_last4)
             return ExtractionResult(source, receipt, confidence=0.97)
 
         if quality == "blurry":
             # Fields are still right, but the model is honestly unsure.
-            receipt = Receipt(source, data["vendor"], data["date"], data["category"], line_items, stated_total)
+            receipt = Receipt(source, data["vendor"], data["date"], data["category"], line_items, stated_total, card_last4)
             return ExtractionResult(source, receipt, confidence=0.55, notes=["image is blurry; values uncertain"])
 
         # unreadable: the model invents an inflated total (x1.9) and a single

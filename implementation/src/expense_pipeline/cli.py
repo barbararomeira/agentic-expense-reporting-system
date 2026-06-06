@@ -18,7 +18,7 @@ EXAMPLES = Path(__file__).resolve().parents[2] / "examples"
 
 def cmd_run(args: argparse.Namespace) -> None:
     policy_path = args.policy or (EXAMPLES / "policy.json")
-    pipeline = Pipeline.default(policy_path)
+    pipeline = Pipeline.default(policy_path, store_region=args.region)
     report = load_report(args.report)
     result = pipeline.run_report(report, validate=not args.no_validation)
 
@@ -41,6 +41,12 @@ def main(argv: list[str] | None = None) -> None:
         "--no-validation",
         action="store_true",
         help="skip Agent 1's validation gate (reproduces the Step 2 bug)",
+    )
+    p_run.add_argument(
+        "--region",
+        default="US",
+        choices=["US", "EU"],
+        help="where the data store is hosted (default: US)",
     )
     p_run.set_defaults(func=cmd_run)
 
