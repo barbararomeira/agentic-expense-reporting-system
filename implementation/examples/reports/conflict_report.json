@@ -1,0 +1,6 @@
+{
+  "report_id": "RPT-CONFLICT",
+  "employee_id": "emp-300",
+  "purpose": "Team accommodation",
+  "receipts": ["hotel_clear"]
+}

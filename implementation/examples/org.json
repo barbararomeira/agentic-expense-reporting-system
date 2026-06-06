@@ -1,8 +1,12 @@
 {
   "employees": {
-    "emp-100": {"name": "Dana Lee", "role": "Engineer", "department": "Engineering", "region": "US", "manager_id": "mgr-eng"}
+    "emp-100": {"name": "Dana Lee", "role": "Engineer", "department": "Engineering", "region": "US", "manager_id": "lead-eng"},
+    "emp-200": {"name": "Mateo Ruiz", "role": "Sales Rep", "department": "Sales", "region": "EU", "manager_id": "mgr-sales"},
+    "emp-300": {"name": "Sam Cohen", "role": "Engineer", "department": "Engineering", "region": "US", "manager_id": "mgr-eng"}
   },
   "approvers": {
-    "Engineering": {"id": "mgr-eng", "name": "Priya Shah", "department": "Engineering"}
+    "Engineering": {"id": "mgr-eng", "name": "Priya Shah", "department": "Engineering"},
+    "Finance": {"id": "mgr-fin", "name": "Aiko Tanaka", "department": "Finance"},
+    "Sales": {"id": "mgr-sales", "name": "Tom Becker", "department": "Sales"}
   }
 }

@@ -1,0 +1,8 @@
+{
+  "vendor": "Sky Air",
+  "date": "2026-05-10",
+  "category": "transport",
+  "line_items": [{"description": "International business flight", "amount": 6000.00}],
+  "stated_total": 6000.00,
+  "image_quality": "clear"
+}

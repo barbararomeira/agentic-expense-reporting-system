@@ -19,10 +19,12 @@ class PolicyAnalysis:
     violations: list[str] = field(default_factory=list)
     recommend_approve: bool = True
     summary: str = ""
+    categories: list[str] = field(default_factory=list)
 
 
 def run_agent2(receipts: list[Receipt], policy: Policy, transcript: list[str]) -> PolicyAnalysis:
     total = sum((r.stated_total for r in receipts), Decimal("0"))
+    categories = sorted({r.category for r in receipts})
     violations: list[str] = []
 
     for r in receipts:
@@ -35,4 +37,7 @@ def run_agent2(receipts: list[Receipt], policy: Policy, transcript: list[str]) -
         + ("within policy" if recommend else "; ".join(violations))
     )
     transcript.append(f"agent2: {summary}")
-    return PolicyAnalysis(total=total, violations=violations, recommend_approve=recommend, summary=summary)
+    return PolicyAnalysis(
+        total=total, violations=violations, recommend_approve=recommend,
+        summary=summary, categories=categories,
+    )

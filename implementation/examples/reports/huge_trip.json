@@ -1,0 +1,6 @@
+{
+  "report_id": "RPT-HUGE",
+  "employee_id": "emp-100",
+  "purpose": "Executive offsite: international travel",
+  "receipts": ["bigflight_clear", "hotel_clear"]
+}
