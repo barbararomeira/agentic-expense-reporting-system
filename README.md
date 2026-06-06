@@ -30,5 +30,18 @@ Reading only the Submission gives you the conclusion; reading the Reasoning show
 - [`05-extend-workflow.md`](05-extend-workflow.md) — adding a new customer-requested capability
 - [`06-cost-drivers.md`](06-cost-drivers.md) — analyzing operational cost drivers
 - [`architecture.md`](architecture.md) — the full system after all steps, in one diagram (each addition colour-coded to its step)
+- [`implementation/`](implementation/) — a **runnable** version of the system: the three agents, the gates, and the privacy/cost logic in Python, with tests
 
 Architecture diagrams live in [`diagrams/`](diagrams/) and are also embedded inline in each step doc via Mermaid.
+
+## Runnable implementation
+
+The [`implementation/`](implementation/) folder turns the design above into working code — a small Python package (`expense_pipeline`) where one expense report flows through Agent 1 → Agent 2 → Agent 3, with the Step 2 validation gate, Step 3 human review, Step 5 two-person approval, and Step 4 privacy/residency controls all enforced. Receipt extraction runs on a deterministic mock by default, so the whole pipeline and its tests run with **no API key and no network**. See [`implementation/README.md`](implementation/README.md) for the full guide.
+
+```bash
+cd implementation
+python3 -m venv .venv && ./.venv/bin/pip install -e ".[dev]"
+./.venv/bin/python -m expense_pipeline run examples/reports/huge_trip.json   # two-person approval
+./.venv/bin/python -m expense_pipeline cost                                  # cost-driver table
+./.venv/bin/python -m pytest                                                 # 24 tests, offline
+```
